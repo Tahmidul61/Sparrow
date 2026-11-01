@@ -1,0 +1,116 @@
+# Bismi Treats — robots.txt
+# Official website: bismitreats.com
+# bismitreats.online is DISCONTINUED — do not use
+
+# ── AI SEARCH ENGINES (full access to public pages) ──────────
+User-agent: OAI-SearchBot
+Allow: /
+Allow: /ai
+Allow: /gallery
+Allow: /products/
+Allow: /about
+Allow: /how-to-order
+Allow: /fillings
+Allow: /llms.txt
+Allow: /sitemap.xml
+Disallow: /admin.html
+Disallow: /website-admin.html
+Disallow: /api/
+
+User-agent: GPTBot
+Allow: /
+Allow: /ai
+Allow: /gallery
+Allow: /products/
+Allow: /about
+Allow: /how-to-order
+Allow: /fillings
+Allow: /llms.txt
+Allow: /sitemap.xml
+Disallow: /admin.html
+Disallow: /website-admin.html
+Disallow: /api/
+
+User-agent: ChatGPT-User
+Allow: /
+Allow: /ai
+Allow: /gallery
+Allow: /products/
+Disallow: /admin.html
+Disallow: /api/
+
+User-agent: PerplexityBot
+Allow: /
+Allow: /ai
+Allow: /gallery
+Allow: /products/
+Allow: /llms.txt
+Disallow: /admin.html
+Disallow: /api/
+
+User-agent: anthropic-ai
+Allow: /
+Allow: /ai
+Allow: /gallery
+Allow: /products/
+Allow: /llms.txt
+Disallow: /admin.html
+Disallow: /api/
+
+User-agent: ClaudeBot
+Allow: /
+Allow: /ai
+Allow: /gallery
+Allow: /products/
+Disallow: /admin.html
+Disallow: /api/
+
+# ── GOOGLE ────────────────────────────────────────────────────
+User-agent: Googlebot
+Allow: /
+Allow: /gallery
+Allow: /products/
+Allow: /about
+Allow: /how-to-order
+Allow: /fillings
+Allow: /sitemap.xml
+Disallow: /admin.html
+Disallow: /website-admin.html
+Disallow: /api/
+
+User-agent: Googlebot-Image
+Allow: /
+Allow: /uploads/photos/
+Allow: /gallery
+Allow: /products/
+
+# ── BING / MICROSOFT ──────────────────────────────────────────
+User-agent: Bingbot
+Allow: /
+Allow: /gallery
+Allow: /products/
+Disallow: /admin.html
+Disallow: /api/
+
+# ── ALL OTHER BOTS ────────────────────────────────────────────
+User-agent: *
+Allow: /
+Allow: /gallery
+Allow: /products/
+Allow: /about
+Allow: /how-to-order
+Allow: /fillings
+Allow: /ai
+Allow: /llms.txt
+Disallow: /admin.html
+Disallow: /website-admin.html
+Disallow: /counter.html
+Disallow: /kitchen.html
+Disallow: /delivery.html
+Disallow: /login.html
+Disallow: /install.html
+Disallow: /api/
+
+# ── SITEMAPS ──────────────────────────────────────────────────
+Sitemap: https://bismitreats.com/sitemap.xml
+Sitemap: https://www.bismitreats.com/sitemap.xml

@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+<title>Bismi Treats — Staff Install</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --acc:#C9A96E;--acc-d:#A07840;--acc-l:rgba(201,169,110,.12);
+  --bg:#F7F9FC;--card:rgba(255,255,255,.92);--border:rgba(220,228,240,.8);
+  --t1:#111827;--t2:#4B5563;--t3:#9CA3AF;
+  --r2:12px;--r3:16px;--r4:24px;--rf:9999px;
+  --sh-sm:0 2px 8px rgba(0,0,0,.06);--sh-md:0 4px 20px rgba(0,0,0,.08);
+  --ease:cubic-bezier(.4,0,.2,1);
+}
+body{
+  background:linear-gradient(160deg,#fff 0%,#F7F9FC 50%,#F0F4FA 100%);
+  min-height:100vh;font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;
+  color:var(--t1);-webkit-font-smoothing:antialiased;
+  display:flex;flex-direction:column;align-items:center;
+  padding:24px 16px 40px;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+
+/* HEADER */
+.page-header{text-align:center;margin-bottom:28px;animation:fadeUp .4s var(--ease)}
+.logo-wrap{
+  width:72px;height:72px;border-radius:50%;overflow:hidden;margin:0 auto 12px;
+  border:2px solid rgba(201,169,110,.3);
+  box-shadow:0 0 0 6px rgba(201,169,110,.08),var(--sh-md);
+}
+.logo-wrap img{width:100%;height:100%;object-fit:cover}
+.page-title{font-size:1.3rem;font-weight:800;color:var(--t1);letter-spacing:-.02em}
+.page-sub{font-size:.82rem;color:var(--t3);margin-top:4px}
+
+/* ACCESS GATE */
+.gate{
+  background:var(--card);backdrop-filter:blur(20px);
+  border:1px solid var(--border);border-radius:var(--r4);
+  padding:24px 20px;width:100%;max-width:380px;
+  box-shadow:var(--sh-md);margin-bottom:20px;
+  animation:fadeUp .4s var(--ease) .1s both;
+}
+.gate-title{font-size:.88rem;font-weight:700;color:var(--t1);margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.gate-sub{font-size:.75rem;color:var(--t3);margin-bottom:16px}
+.gate-input{
+  width:100%;padding:11px 14px;
+  background:rgba(255,255,255,.85);border:1px solid var(--border);
+  border-radius:var(--r2);font-size:.88rem;font-family:inherit;
+  color:var(--t1);outline:none;transition:all .2s var(--ease);
+  margin-bottom:10px;
+}
+.gate-input:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--acc-l)}
+.gate-btn{
+  width:100%;padding:12px;
+  background:linear-gradient(135deg,var(--acc),var(--acc-d));
+  color:white;border:none;border-radius:var(--rf);
+  font-size:.88rem;font-weight:700;cursor:pointer;font-family:inherit;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  box-shadow:0 4px 16px rgba(201,169,110,.35);
+  transition:all .2s var(--ease);
+}
+.gate-btn:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(201,169,110,.45)}
+.gate-err{font-size:.75rem;color:#dc2626;margin-top:6px;display:none;text-align:center}
+
+/* ROLE CARDS */
+.roles-section{width:100%;max-width:380px;display:none;animation:fadeUp .4s var(--ease)}
+.roles-title{font-size:.75rem;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;text-align:center}
+.role-card{
+  background:var(--card);backdrop-filter:blur(20px);
+  border:1px solid var(--border);border-radius:var(--r3);
+  padding:18px 16px;margin-bottom:10px;
+  display:flex;align-items:center;gap:14px;
+  box-shadow:var(--sh-sm);cursor:pointer;
+  transition:all .2s var(--ease);
+  text-decoration:none;color:inherit;
+}
+.role-card:hover{transform:translateY(-2px);box-shadow:var(--sh-md);border-color:rgba(201,169,110,.3)}
+.role-card:active{transform:scale(.97)}
+.role-icon{
+  width:48px;height:48px;border-radius:var(--r2);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;
+}
+.role-icon.admin    {background:linear-gradient(135deg,#fef3c7,#fde68a)}
+.role-icon.counter  {background:linear-gradient(135deg,#dbeafe,#bfdbfe)}
+.role-icon.kitchen  {background:linear-gradient(135deg,#dcfce7,#bbf7d0)}
+.role-icon.delivery {background:linear-gradient(135deg,#fce7f3,#fbcfe8)}
+.role-info{flex:1}
+.role-name{font-size:.92rem;font-weight:700;color:var(--t1)}
+.role-desc{font-size:.72rem;color:var(--t3);margin-top:2px}
+.role-action{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.install-btn{
+  background:linear-gradient(135deg,var(--acc),var(--acc-d));
+  color:white;border:none;padding:6px 14px;border-radius:var(--rf);
+  font-size:.72rem;font-weight:700;cursor:pointer;font-family:inherit;
+  white-space:nowrap;transition:all .15s;
+}
+.install-btn:hover{opacity:.9}
+.open-btn{
+  background:rgba(255,255,255,.8);border:1px solid var(--border);
+  color:var(--t2);padding:5px 12px;border-radius:var(--rf);
+  font-size:.7rem;font-weight:600;cursor:pointer;font-family:inherit;
+  white-space:nowrap;transition:all .15s;text-decoration:none;
+  display:inline-block;text-align:center;
+}
+.open-btn:hover{border-color:var(--acc);color:var(--acc-d)}
+
+/* BIOMETRIC SECTION */
+.bio-section{
+  background:var(--card);backdrop-filter:blur(20px);
+  border:1px solid var(--border);border-radius:var(--r3);
+  padding:18px 16px;width:100%;max-width:380px;
+  box-shadow:var(--sh-sm);margin-top:10px;
+  display:none;animation:fadeUp .4s var(--ease);
+}
+.bio-title{font-size:.88rem;font-weight:700;color:var(--t1);margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.bio-sub{font-size:.75rem;color:var(--t3);margin-bottom:14px;line-height:1.5}
+.bio-status{font-size:.75rem;color:var(--t3);margin-top:8px;text-align:center;min-height:18px}
+.bio-btn{
+  width:100%;padding:12px;
+  background:rgba(17,24,39,.06);border:1px solid var(--border);
+  color:var(--t1);border-radius:var(--rf);
+  font-size:.85rem;font-weight:600;cursor:pointer;font-family:inherit;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  transition:all .2s var(--ease);margin-bottom:8px;
+}
+.bio-btn:hover{background:rgba(17,24,39,.1)}
+.bio-btn.registered{border-color:var(--acc);color:var(--acc-d);background:var(--acc-l)}
+.bio-btn i{font-size:1.1rem}
+
+/* HOW TO INSTALL */
+.how-section{
+  background:var(--card);backdrop-filter:blur(20px);
+  border:1px solid var(--border);border-radius:var(--r3);
+  padding:16px;width:100%;max-width:380px;
+  box-shadow:var(--sh-sm);margin-top:10px;
+  display:none;
+}
+.how-title{font-size:.8rem;font-weight:700;color:var(--t2);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.how-step{display:flex;gap:10px;margin-bottom:8px;font-size:.75rem;color:var(--t2);align-items:flex-start}
+.how-num{
+  width:20px;height:20px;border-radius:50%;flex-shrink:0;
+  background:var(--acc-l);color:var(--acc-d);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.65rem;font-weight:700;
+}
+
+/* TOAST */
+#toast{
+  position:fixed;top:16px;left:50%;transform:translateX(-50%);
+  background:#16a34a;color:white;padding:10px 20px;border-radius:var(--rf);
+  font-size:.8rem;font-weight:600;z-index:999;
+  opacity:0;pointer-events:none;transition:opacity .3s;white-space:nowrap;
+  box-shadow:0 4px 16px rgba(0,0,0,.2);
+}
+#toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<!-- HEADER -->
+<div class="page-header">
+<div class="logo-wrap"><img alt="Bismi Treats" id="pageLogo" src=""/></div>
+<div class="page-title">Bismi Treats</div>
+<div class="page-sub">Staff Portal — Install &amp; Access</div>
+</div>
+<!-- ACCESS GATE -->
+<div class="gate" id="accessGate">
+<div class="gate-title"><i class="fas fa-lock" style="color:var(--acc)"></i> Staff Access Only</div>
+<div class="gate-sub">Enter your staff password to access the install page.</div>
+<input autocomplete="current-password" class="gate-input" id="gatePass" onkeydown="if(event.key==='Enter')checkGate()" placeholder="Staff password" type="password"/>
+<button class="gate-btn" onclick="checkGate()">
+<i class="fas fa-arrow-right"></i> Continue
+  </button>
+<div class="gate-err" id="gateErr">Incorrect password. Please try again.</div>
+</div>
+<!-- ROLE CARDS (shown after auth) -->
+<div class="roles-section" id="rolesSection">
+<div class="roles-title">Choose your role to install</div>
+<div class="role-card">
+<div class="role-icon admin">👑</div>
+<div class="role-info">
+<div class="role-name">Admin</div>
+<div class="role-desc">Full access — orders, settings, analytics</div>
+</div>
+<div class="role-action">
+<button class="install-btn" onclick="installRole('admin','admin.html')">
+<i class="fas fa-download"></i> Install
+      </button>
+<a class="open-btn" href="admin.html">Open</a>
+</div>
+</div>
+<div class="role-card">
+<div class="role-icon counter">🏪</div>
+<div class="role-info">
+<div class="role-name">Counter</div>
+<div class="role-desc">Take orders, view schedule</div>
+</div>
+<div class="role-action">
+<button class="install-btn" onclick="installRole('counter','counter.html')">
+<i class="fas fa-download"></i> Install
+      </button>
+<a class="open-btn" href="counter.html">Open</a>
+</div>
+</div>
+<div class="role-card">
+<div class="role-icon kitchen">🍳</div>
+<div class="role-info">
+<div class="role-name">Kitchen</div>
+<div class="role-desc">View orders, mark ready, see photos</div>
+</div>
+<div class="role-action">
+<button class="install-btn" onclick="installRole('kitchen','kitchen.html')">
+<i class="fas fa-download"></i> Install
+      </button>
+<a class="open-btn" href="kitchen.html">Open</a>
+</div>
+</div>
+<div class="role-card">
+<div class="role-icon delivery">🚚</div>
+<div class="role-info">
+<div class="role-name">Delivery</div>
+<div class="role-desc">View deliveries, mark delivered</div>
+</div>
+<div class="role-action">
+<button class="install-btn" onclick="installRole('delivery','delivery.html')">
+<i class="fas fa-download"></i> Install
+      </button>
+<a class="open-btn" href="delivery.html">Open</a>
+</div>
+</div>
+<!-- BIOMETRIC SECTION -->
+<div class="bio-section" id="bioSection">
+<div class="bio-title"><i class="fas fa-fingerprint" style="color:var(--acc)"></i> Biometric Login</div>
+<div class="bio-sub">
+      Register your fingerprint or Face ID so you can log in instantly next time — no password needed.
+      Works on iPhone (Face ID / Touch ID) and Android (fingerprint / face unlock).
+    </div>
+<button class="bio-btn" id="bioRegisterBtn" onclick="registerBiometric()">
+<i class="fas fa-fingerprint"></i> Register Fingerprint / Face ID
+    </button>
+<button class="bio-btn" id="bioTestBtn" onclick="testBiometric()" style="display:none">
+<i class="fas fa-check-circle"></i> Test Biometric Login
+    </button>
+<div class="bio-status" id="bioStatus"></div>
+</div>
+<!-- HOW TO INSTALL -->
+<div class="how-section" id="howSection">
+<div class="how-title"><i class="fas fa-mobile-alt" style="color:var(--acc)"></i> How to install on your phone</div>
+<div id="howSteps"></div>
+</div>
+</div>
+<script src="js/biometric.js"></script>
+<script>
+// ── STAFF PASSWORDS ───────────────────────────────────────────
+var STAFF_PASSWORDS = ['bismistaff', '920067', '78674233'];
+var _authed = false;
+
+// ── LOGO ──────────────────────────────────────────────────────
+(function(){
+  // Try to load logo from catalogue API
+  fetch('/api/catalogue').then(function(r){return r.json();}).then(function(d){
+    if(d && d.business && d.business.logoImg){
+      document.getElementById('pageLogo').src = d.business.logoImg;
+    }
+  }).catch(function(){});
+})();
+
+// ── GATE ──────────────────────────────────────────────────────
+function checkGate(){
+  var pw = document.getElementById('gatePass').value.trim();
+  if(STAFF_PASSWORDS.indexOf(pw) >= 0){
+    _authed = true;
+    document.getElementById('accessGate').style.display = 'none';
+    document.getElementById('rolesSection').style.display = 'block';
+    // Show biometric section if supported
+    if(window.BismiAuth && window.BismiAuth.isSupported()){
+      document.getElementById('bioSection').style.display = 'block';
+      checkBioStatus();
+    }
+    // Show install instructions
+    document.getElementById('howSection').style.display = 'block';
+    renderHowSteps();
+    // Store auth in session
+    try{ sessionStorage.setItem('staffAuthed','1'); }catch(e){}
+  } else {
+    var err = document.getElementById('gateErr');
+    err.style.display = 'block';
+    setTimeout(function(){ err.style.display = 'none'; }, 3000);
+  }
+}
+
+// ── INSTALL ROLE ──────────────────────────────────────────────
+var _deferredInstall = null;
+window.addEventListener('beforeinstallprompt', function(e){
+  e.preventDefault();
+  _deferredInstall = e;
+});
+
+function installRole(role, url){
+  // Save role preference
+  try{ localStorage.setItem('bismiStaffRole', role); }catch(e){}
+  if(_deferredInstall){
+    _deferredInstall.prompt();
+    _deferredInstall.userChoice.then(function(r){
+      if(r.outcome === 'accepted'){
+        showToast('App installed! Find it on your home screen.');
+      } else {
+        showInstallFallback(role, url);
+      }
+      _deferredInstall = null;
+    });
+  } else {
+    showInstallFallback(role, url);
+  }
+}
+
+function showInstallFallback(role, url){
+  // Open the role URL — user can then use browser's "Add to Home Screen"
+  window.open(url, '_blank');
+  showToast('Tap your browser menu → "Add to Home Screen"');
+}
+
+// ── BIOMETRIC ─────────────────────────────────────────────────
+function checkBioStatus(){
+  if(!window.BismiAuth) return;
+  var registered = window.BismiAuth.isRegistered();
+  var btn = document.getElementById('bioRegisterBtn');
+  var testBtn = document.getElementById('bioTestBtn');
+  var status = document.getElementById('bioStatus');
+  if(registered){
+    btn.classList.add('registered');
+    btn.innerHTML = '<i class="fas fa-check"></i> Biometric Registered ✓';
+    testBtn.style.display = 'flex';
+    status.textContent = 'Your biometric is set up. You can now log in with fingerprint/Face ID.';
+    status.style.color = '#16a34a';
+  } else {
+    btn.classList.remove('registered');
+    btn.innerHTML = '<i class="fas fa-fingerprint"></i> Register Fingerprint / Face ID';
+    testBtn.style.display = 'none';
+    status.textContent = '';
+  }
+}
+
+function registerBiometric(){
+  if(!window.BismiAuth){ showToast('Biometrics not supported on this device.'); return; }
+  var status = document.getElementById('bioStatus');
+  status.textContent = 'Setting up biometric...';
+  status.style.color = 'var(--t3)';
+  window.BismiAuth.register('staff').then(function(ok){
+    if(ok){
+      showToast('Biometric registered successfully!');
+      checkBioStatus();
+    } else {
+      status.textContent = 'Registration failed. Please try again.';
+      status.style.color = '#dc2626';
+    }
+  }).catch(function(e){
+    status.textContent = 'Error: ' + (e.message || 'Registration failed');
+    status.style.color = '#dc2626';
+  });
+}
+
+function testBiometric(){
+  if(!window.BismiAuth) return;
+  var status = document.getElementById('bioStatus');
+  status.textContent = 'Verifying biometric...';
+  window.BismiAuth.authenticate().then(function(ok){
+    if(ok){
+      status.textContent = '✅ Biometric works! You can now use it to log in.';
+      status.style.color = '#16a34a';
+      showToast('Biometric login works!');
+    } else {
+      status.textContent = '❌ Verification failed. Try again.';
+      status.style.color = '#dc2626';
+    }
+  }).catch(function(e){
+    status.textContent = 'Error: ' + (e.message || 'Verification failed');
+    status.style.color = '#dc2626';
+  });
+}
+
+// ── HOW TO INSTALL ────────────────────────────────────────────
+function renderHowSteps(){
+  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  var isAndroid = /Android/.test(navigator.userAgent);
+  var steps = [];
+  if(isIOS){
+    steps = [
+      'Tap the <strong>Share</strong> button (box with arrow) at the bottom of Safari',
+      'Scroll down and tap <strong>"Add to Home Screen"</strong>',
+      'Tap <strong>Add</strong> in the top right',
+      'Find the Bismi Treats icon on your home screen'
+    ];
+  } else if(isAndroid){
+    steps = [
+      'Tap the <strong>three dots menu</strong> (⋮) in Chrome',
+      'Tap <strong>"Add to Home Screen"</strong> or <strong>"Install App"</strong>',
+      'Tap <strong>Install</strong> to confirm',
+      'Find the Bismi Treats icon on your home screen'
+    ];
+  } else {
+    steps = [
+      'Click the <strong>install icon</strong> (⊕) in your browser address bar',
+      'Or click the browser menu → <strong>"Install Bismi Treats"</strong>',
+      'Click <strong>Install</strong> to confirm',
+      'Find the app in your Start Menu or Applications'
+    ];
+  }
+  var html = steps.map(function(s, i){
+    return '<div class="how-step"><div class="how-num">'+(i+1)+'</div><div>'+s+'</div></div>';
+  }).join('');
+  document.getElementById('howSteps').innerHTML = html;
+}
+
+// ── TOAST ─────────────────────────────────────────────────────
+function showToast(msg){
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._tmr);
+  t._tmr = setTimeout(function(){ t.classList.remove('show'); }, 3000);
+}
+
+// Auto-check if already authed this session
+try{
+  if(sessionStorage.getItem('staffAuthed') === '1'){
+    document.getElementById('gatePass').value = 'bismistaff';
+    checkGate();
+  }
+}catch(e){}
+</script>
+</body>
+</html>

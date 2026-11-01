@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+
+<html lang="pt">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+<title>Bismi Treats — Cozinha</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#F7F7F8;--white:#FFFFFF;--black:#111111;--text:#1A1A1A;--text2:#555555;--text3:#999999;--border:#E5E5E5;--accent:#C9A96E;--accent2:#A07840;--accent-pale:#FBF7EF;--accent-light:#F5EDD8;--success:#16A34A;--warning:#D97706;--danger:#DC2626;--info:#2563EB;--font:'Inter',system-ui,sans-serif;--radius:10px;--radius-sm:6px;--shadow:0 1px 3px rgba(0,0,0,.08)}
+body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh}
+.topbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 16px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--shadow)}
+.topbar-left{display:flex;align-items:center;gap:10px}
+.role-badge{background:#f0fdf4;color:var(--success);padding:4px 12px;border-radius:20px;font-size:0.75rem;font-weight:700;border:1px solid #bbf7d0}
+.user-name{font-weight:600;color:var(--black);font-size:0.9rem}
+.topbar-right{display:flex;align-items:center;gap:8px}
+.btn-logout{background:var(--bg);border:1px solid var(--border);color:var(--text2);padding:6px 12px;border-radius:var(--radius-sm);cursor:pointer;font-size:0.78rem;font-family:var(--font);display:flex;align-items:center;gap:5px;transition:all .15s}
+.btn-logout:hover{border-color:var(--danger);color:var(--danger)}
+.last-update{font-size:0.7rem;color:var(--text3)}
+.filters{padding:10px 16px;background:var(--white);border-bottom:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.filter-btn{background:var(--bg);border:1px solid var(--border);color:var(--text2);padding:6px 14px;border-radius:20px;cursor:pointer;font-size:0.78rem;font-family:var(--font);transition:all .15s;font-weight:500}
+.filter-btn.active{background:var(--accent);border-color:var(--accent);color:white;font-weight:600}
+.order-count-badge{background:var(--accent-pale);border:1px solid var(--accent-light);color:var(--accent2);padding:4px 12px;border-radius:20px;font-size:0.75rem;font-weight:700;margin-left:auto}
+.orders-container{padding:14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.kitchen-card{background:var(--white);border:2px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);transition:all .2s}
+.kitchen-card.urgent{border-color:var(--danger);box-shadow:0 2px 16px rgba(220,38,38,.15)}
+.kitchen-card.ready-card{border-color:var(--success);box-shadow:0 2px 16px rgba(22,163,74,.15)}
+.card-header{padding:10px 14px;background:var(--bg);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px}
+.order-id{font-weight:700;color:var(--accent2);font-size:0.85rem}
+.status-badge{font-size:0.72rem;font-weight:700;padding:3px 9px;border-radius:20px}
+.card-body{padding:12px 14px}
+.info-row{display:flex;align-items:flex-start;gap:8px;margin-bottom:7px;font-size:0.82rem}
+.info-row i{color:var(--accent);width:16px;flex-shrink:0;margin-top:2px;font-size:0.75rem}
+.info-row .label{color:var(--text3);min-width:55px;font-size:0.75rem}
+.info-row .value{color:var(--text);font-weight:500;flex:1;line-height:1.4}
+.chef-note{background:var(--accent-pale);border-left:3px solid var(--accent);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:8px 10px;margin-top:8px;font-size:0.8rem;color:var(--text2);font-style:italic}
+.time-badge{display:inline-flex;align-items:center;gap:5px;background:#eff6ff;color:var(--info);padding:4px 10px;border-radius:8px;font-size:0.75rem;font-weight:600;border:1px solid #bfdbfe}
+.time-badge.urgent{background:#fef2f2;color:var(--danger);border-color:#fecaca}
+.photos-section{margin-top:10px;border-top:1px solid var(--border);padding-top:10px}
+.photos-title{font-size:0.7rem;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+.photos-grid{display:flex;gap:6px;flex-wrap:wrap}
+.photo-thumb{width:60px;height:60px;border-radius:var(--radius-sm);object-fit:cover;border:1.5px solid var(--border);cursor:pointer;transition:all .15s}
+.photo-thumb:hover{border-color:var(--accent);transform:scale(1.05)}
+.card-actions{padding:10px 14px;border-top:1px solid var(--border);display:flex;gap:6px;flex-wrap:wrap;background:#fafafa}
+.btn-action{border:none;padding:7px 12px;border-radius:var(--radius-sm);cursor:pointer;font-size:0.75rem;font-weight:600;display:flex;align-items:center;gap:5px;transition:all .15s;font-family:var(--font)}
+.btn-confirm{background:#eff6ff;color:var(--info);border:1px solid #bfdbfe}
+.btn-confirm:hover{background:var(--info);color:white}
+.btn-ready{background:#f0fdf4;color:var(--success);border:1px solid #bbf7d0;flex:1;justify-content:center}
+.btn-ready:hover{background:var(--success);color:white}
+.empty-state{text-align:center;padding:60px 20px;color:var(--text3);grid-column:1/-1}
+.empty-state i{font-size:3rem;margin-bottom:16px;display:block;opacity:.3;color:var(--accent)}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;z-index:1000;padding:16px}
+.modal-overlay.active{display:flex}
+.photo-modal-img{max-width:90vw;max-height:85vh;border-radius:var(--radius);object-fit:contain}
+.modal-close-btn{position:fixed;top:16px;right:16px;background:white;border:none;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow)}
+.weight-modal{background:var(--white);border-radius:var(--radius);width:100%;max-width:380px;overflow:hidden;box-shadow:0 20px 40px rgba(0,0,0,.2)}
+.modal-header{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg)}
+.modal-title{font-weight:600;font-size:0.9rem;color:var(--black);display:flex;align-items:center;gap:8px}
+.modal-body{padding:18px}
+.modal-footer{padding:12px 18px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;background:var(--bg)}
+.form-label{font-size:0.72rem;font-weight:500;color:var(--text2);display:block;margin-bottom:4px}
+.form-select,.form-input{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:var(--radius-sm);font-size:0.82rem;outline:none;font-family:var(--font);width:100%;margin-bottom:10px}
+.price-breakdown{background:var(--accent-pale);border:1px solid var(--accent-light);border-radius:var(--radius);padding:12px;font-size:0.82rem;line-height:1.8}
+.total-line{font-weight:700;font-size:1rem;color:var(--accent2);border-top:1px solid var(--accent-light);margin-top:6px;padding-top:6px}
+.discount-btns{display:flex;gap:6px;margin-bottom:10px}
+.discount-btn{background:var(--bg);border:1px solid var(--border);color:var(--text2);padding:5px 10px;border-radius:20px;cursor:pointer;font-size:0.75rem;font-weight:500;font-family:var(--font);transition:all .15s}
+.discount-btn.active{background:var(--success);border-color:var(--success);color:white}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;border:none;padding:8px 18px;border-radius:var(--radius-sm);cursor:pointer;font-weight:600;font-size:0.82rem;font-family:var(--font)}
+.btn-secondary{background:var(--white);border:1px solid var(--border);color:var(--text2);padding:8px 18px;border-radius:var(--radius-sm);cursor:pointer;font-weight:500;font-size:0.82rem;font-family:var(--font)}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--black);color:white;padding:10px 16px;border-radius:var(--radius);font-size:0.82rem;font-weight:500;z-index:9999;transform:translateX(120%);transition:transform .3s;max-width:280px}
+.toast.show{transform:translateX(0)}
+.toast.success{background:var(--success)}.toast.error{background:var(--danger)}.toast.info{background:var(--info)}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+@media(max-width:600px){.orders-container{grid-template-columns:1fr;padding:10px}}
+</style>
+</head>
+<body>
+
+<div id="notifBanner" style="background:linear-gradient(135deg,rgba(201,169,110,.15),rgba(255,255,255,.8));border:1px solid rgba(201,169,110,.3);border-radius:10px;padding:10px 14px;margin:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:.8rem;color:#6a4a1a">
+  <div><strong>🔔 Enable Notifications</strong><br/><span style="font-size:.72rem;opacity:.8">Get sound alerts + lock screen notifications for new orders</span></div>
+  <button onclick="requestNotifPermission();document.getElementById('notifBanner').style.display='none'" style="background:linear-gradient(135deg,#C9A96E,#A07840);color:white;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:.78rem;font-weight:600;font-family:inherit;white-space:nowrap">Enable</button>
+</div>
+
+<div class="topbar">
+<div class="topbar-left">
+<span style="font-size:1.2rem">🎂</span>
+<div>
+<div class="user-name" id="userName">Cozinha</div>
+<div class="role-badge">👨‍🍳 Cozinha</div>
+</div>
+</div>
+<div class="topbar-right">
+<span class="last-update" id="lastUpdate">A atualizar...</span>
+<button class="btn-logout" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Sair</button>
+</div>
+</div>
+<div class="filters">
+<button class="filter-btn active" onclick="setFilter('active',this)">Em Curso</button>
+<button class="filter-btn" onclick="setFilter('confirmed',this)">Confirmadas</button>
+<button class="filter-btn" onclick="setFilter('ready',this)">Prontas</button>
+<button class="filter-btn" onclick="setFilter('all',this)">Todas</button>
+<span class="order-count-badge" id="orderCountBadge">0 encomendas</span>
+</div>
+<div class="orders-container" id="ordersContainer">
+<div class="empty-state"><i class="fas fa-utensils"></i><p>A carregar encomendas...</p></div>
+</div>
+<!-- PHOTO VIEW MODAL -->
+<div class="modal-overlay" id="photoModal">
+<button class="modal-close-btn" onclick="document.getElementById('photoModal').classList.remove('active')"><i class="fas fa-times"></i></button>
+<img alt="Foto" class="photo-modal-img" id="photoModalImg" src=""/>
+</div>
+<!-- FINAL WEIGHT MODAL -->
+<div class="modal-overlay" id="finalWeightModal">
+<div class="weight-modal">
+<div class="modal-header">
+<div class="modal-title"><i class="fas fa-weight"></i> Peso Final do Bolo</div>
+</div>
+<div class="modal-body">
+<label class="form-label">Peso Final (selecionar)</label>
+<select class="form-select" id="kitchenWeightSelect" onchange="updateKitchenPrice()"></select>
+<label class="form-label">Ou escrever peso exato (kg)</label>
+<input class="form-input" id="kitchenWeightManual" max="8" min="0.5" oninput="updateKitchenPrice()" placeholder="Ex: 1.25" step="0.01" type="number"/>
+<label class="form-label">Preço por kg (€)</label>
+<input class="form-input" id="kitchenPricePerKg" oninput="updateKitchenPrice()" step="0.01" type="number" value="19.99"/>
+<label class="form-label">Desconto</label>
+<div class="discount-btns">
+<button class="discount-btn" data-pct="5" onclick="setKitchenDiscount(5,this)">5%</button>
+<button class="discount-btn" data-pct="10" onclick="setKitchenDiscount(10,this)">10%</button>
+<button class="discount-btn" data-pct="15" onclick="setKitchenDiscount(15,this)">15%</button>
+<button class="discount-btn" data-pct="20" onclick="setKitchenDiscount(20,this)">20%</button>
+</div>
+<div class="price-breakdown" id="kitchenPriceDisplay"></div>
+</div>
+<div class="modal-footer">
+<button class="btn-secondary" onclick="document.getElementById('finalWeightModal').classList.remove('active')">Cancelar</button>
+<button class="btn-primary" onclick="confirmKitchenWeight()">✅ Confirmar Pronto</button>
+</div>
+</div>
+</div>
+<div class="toast" id="toast"></div>
+<script src="auth.js"></script>
+<script src="script.js"></script>
+<script>
+// ── NOTIFICATION & SOUND SYSTEM ──────────────────────────────
+var _knownOrderIds = null;
+var _notifPermission = 'default';
+var _audioCtx = null;
+
+// Request notification permission on load
+function requestNotifPermission(){
+  if(!('Notification' in window)) return;
+  if(Notification.permission === 'granted'){
+    _notifPermission = 'granted';
+  } else if(Notification.permission !== 'denied'){
+    Notification.requestPermission().then(function(p){
+      _notifPermission = p;
+      if(p === 'granted'){
+        showToast('Notifications enabled! You will be alerted for new orders.', 'success');
+      }
+    });
+  } else {
+    _notifPermission = Notification.permission;
+  }
+}
+
+// Play a chime sound using Web Audio API (no file needed)
+function playOrderChime(){
+  try{
+    if(!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    var ctx = _audioCtx;
+    // Play 3 ascending tones
+    var times = [0, 0.18, 0.36];
+    var freqs = [523, 659, 784]; // C5, E5, G5
+    times.forEach(function(t, i){
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.value = freqs[i];
+      gain.gain.setValueAtTime(0, ctx.currentTime + t);
+      gain.gain.linearRampToValueAtTime(0.4, ctx.currentTime + t + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + t + 0.35);
+      osc.start(ctx.currentTime + t);
+      osc.stop(ctx.currentTime + t + 0.4);
+    });
+  } catch(e){}
+}
+
+// Show lock screen / browser notification
+function showOrderNotification(order){
+  if(_notifPermission !== 'granted') return;
+  try{
+    var title = '🎂 New Order — Bismi Treats';
+    var body = 'Order ' + (order.id||'') + '\n' +
+      (order.customerName||'Customer') + '\n' +
+      (order.cakeType||'') + ' · ' + (order.minWeight||'?') + '–' + (order.maxWeight||'?') + 'kg\n' +
+      'Date: ' + (order.orderDate||'') + ' at ' + (order.orderTime||'');
+    var notif = new Notification(title, {
+      body: body,
+      icon: '/favicon.ico',
+      badge: '/favicon.ico',
+      tag: 'bismi-order-' + (order.id||Date.now()),
+      requireInteraction: true,
+      vibrate: [200, 100, 200, 100, 200]
+    });
+    notif.onclick = function(){
+      window.focus();
+      notif.close();
+    };
+    setTimeout(function(){notif.close();}, 30000);
+  } catch(e){}
+}
+
+// Check for new orders and alert
+function checkForNewOrders(newOrders){
+  if(_knownOrderIds === null){
+    // First load — just record IDs, don't alert
+    _knownOrderIds = new Set(newOrders.map(function(o){return o.id;}));
+    return;
+  }
+  var newOnes = newOrders.filter(function(o){
+    return !_knownOrderIds.has(o.id) && o.status === 'new';
+  });
+  if(newOnes.length > 0){
+    // Update known IDs
+    newOrders.forEach(function(o){_knownOrderIds.add(o.id);});
+    // Play sound
+    playOrderChime();
+    // Show notification for each new order
+    newOnes.forEach(function(o){
+      showOrderNotification(o);
+    });
+    // Flash the page title
+    var origTitle = document.title;
+    var flashCount = 0;
+    var flashInterval = setInterval(function(){
+      document.title = flashCount % 2 === 0 ? '🔔 NEW ORDER! — Kitchen' : origTitle;
+      flashCount++;
+      if(flashCount > 10){ clearInterval(flashInterval); document.title = origTitle; }
+    }, 600);
+    // Show toast
+    showToast('🎂 ' + newOnes.length + ' new order' + (newOnes.length > 1 ? 's' : '') + ' received!', 'success');
+  } else {
+    // Update known IDs for any new ones regardless of status
+    newOrders.forEach(function(o){_knownOrderIds.add(o.id);});
+  }
+}
+
+
+var session = AUTH.checkSession();
+if (!session || session.role !== 'kitchen') window.location.href = 'login.html';
+document.getElementById('userName').textContent = session ? session.name : 'Cozinha';
+
+var currentFilter = 'active';
+var currentReadyOrderId = null;
+var kitchenDiscount = 0;
+
+function setFilter(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  renderKitchenOrders();
+}
+
+function renderKitchenOrders() {
+  var doRender = function(){
+    var list = orders.filter(function(o){
+      if (currentFilter==='active') return o.status!=='delivered'&&o.status!=='cancelled';
+      if (currentFilter!=='all') return o.status===currentFilter;
+      return true;
+    });
+    list.sort(function(a,b){
+      return ((a.orderDate||'9999')+(a.orderTime||'99:99')).localeCompare((b.orderDate||'9999')+(b.orderTime||'99:99'));
+    });
+    document.getElementById('orderCountBadge').textContent = list.length+' encomenda'+(list.length!==1?'s':'');
+    var container = document.getElementById('ordersContainer');
+    if (list.length===0) {
+      container.innerHTML='<div class="empty-state"><i class="fas fa-check-circle" style="color:var(--success);opacity:1"></i><p>Sem encomendas nesta categoria</p></div>';
+      return;
+    }
+    var now = new Date();
+    container.innerHTML = list.map(function(o){
+      var sc = STATUS[o.status]||STATUS.new;
+      var isUrgent = false;
+      if (o.orderDate&&o.orderTime) {
+        var dt = new Date(o.orderDate+'T'+o.orderTime);
+        isUrgent = (dt-now)/3600000 < 6 && (dt-now) > 0;
+      }
+      var photos = o.photos||[];
+      var photosHtml = '';
+      if (photos.length>0) {
+        photosHtml = '<div class="photos-section"><div class="photos-title"><i class="fas fa-camera"></i> Foto de Referência</div>'
+          +'<div class="photos-grid">'+photos.map(function(p){
+            return '<img src="'+fixPhotoUrl(p)+'" class="photo-thumb" onclick="viewKitchenPhoto(\''+fixPhotoUrl(p)+'\')" onerror="this.style.display=\'none\'"/>';
+          }).join('')+'</div></div>';
+      }
+      return '<div class="kitchen-card'+(isUrgent?' urgent':'')+(o.status==='ready'?' ready-card':'')+'">'
+        +'<div class="card-header">'
+          +'<div><div class="order-id">'+(o.orderId||o.id)+(o.customerId?' · '+o.customerId:'')+'</div>'
+          +'<div style="font-size:0.82rem;font-weight:600;color:var(--black);margin-top:2px">'+o.customerName+'</div></div>'
+          +'<span class="status-badge" style="background:'+sc.bg+';color:'+sc.color+'">'+sc.label+'</span>'
+        +'</div>'
+        +'<div class="card-body">'
+          +'<div class="info-row"><i class="fas fa-birthday-cake"></i><span class="label">Bolo</span><span class="value">'+getCakeTypeName(o.cakeType)+'</span></div>'
+          +'<div class="info-row"><i class="fas fa-palette"></i><span class="label">Sabor</span><span class="value">'+getFlavorDesc(o)+'</span></div>'
+          +(o.cakeMessage?'<div class="info-row"><i class="fas fa-comment"></i><span class="label">Msg</span><span class="value">"'+o.cakeMessage+'"</span></div>':'')
+          +'<div class="info-row"><i class="fas fa-weight"></i><span class="label">Peso</span><span class="value">'+getWeightDesc(o)+'</span></div>'
+          +'<div class="info-row"><i class="fas fa-calendar"></i><span class="label">Entrega</span>'
+            +'<span class="value"><span class="time-badge'+(isUrgent?' urgent':'')+'"><i class="fas fa-clock"></i> '+formatDate(o.orderDate)+' às '+(o.orderTime||'—')+'</span></span>'
+          +'</div>'
+          +(o.chefNotes?'<div class="chef-note"><i class="fas fa-utensils" style="margin-right:5px"></i>'+o.chefNotes+'</div>':'')
+          +photosHtml
+        +'</div>'
+        +'<div class="card-actions">'
+          +(o.status==='new'?'<button class="btn-action btn-confirm" onclick="confirmKitchenOrder('+o.id+')"><i class="fas fa-check"></i> Confirmar</button>':'')
+          +(o.status!=='ready'&&o.status!=='delivered'?'<button class="btn-action btn-ready" onclick="markKitchenReady('+o.id+')"><i class="fas fa-check-circle"></i> Marcar Pronto</button>':'')
+          +(o.status==='ready'?'<div style="color:var(--success);font-size:0.8rem;font-weight:600;display:flex;align-items:center;gap:5px;flex:1"><i class="fas fa-check-circle"></i> Pronto! Peso: '+(o.finalWeight||'—')+' kg · €'+(o.finalPrice||'—')+'</div>':'')
+        +'</div>'
+      +'</div>';
+    }).join('');
+    document.getElementById('lastUpdate').textContent = 'Atualizado: '+new Date().toLocaleTimeString('pt-PT');
+  };
+  if(orders.length===0){loadData(doRender);}else{doRender();}
+}
+
+function confirmKitchenOrder(orderId) {
+  var order = orders.find(function(o){return o.id===orderId;});
+  if (!order) return;
+  order.status = 'confirmed';
+  saveOrder(order, function(){renderKitchenOrders();showToast('✅ Encomenda confirmada','success');});
+}
+
+function markKitchenReady(orderId) {
+  currentReadyOrderId = orderId;
+  kitchenDiscount = 0;
+  document.querySelectorAll('.discount-btn').forEach(function(b){b.classList.remove('active');});
+  var order = orders.find(function(o){return o.id===orderId;});
+  var ppkg = order ? getCakeTypePrice(order.cakeType) : 19.99;
+  var sel = document.getElementById('kitchenWeightSelect');
+  sel.innerHTML = '';
+  for (var w=0.8; w<=6.0; w=Math.round((w+0.1)*10)/10) {
+    sel.innerHTML += '<option value="'+w.toFixed(1)+'">'+w.toFixed(1)+' kg</option>';
+  }
+  if (order&&order.minWeight) sel.value = order.minWeight;
+  document.getElementById('kitchenPricePerKg').value = ppkg;
+  var manualEl = document.getElementById('kitchenWeightManual');
+  if (manualEl) manualEl.value = '';
+  updateKitchenPrice();
+  document.getElementById('finalWeightModal').classList.add('active');
+}
+
+function setKitchenDiscount(pct, btn) {
+  kitchenDiscount = (kitchenDiscount===pct)?0:pct;
+  document.querySelectorAll('.discount-btn').forEach(function(b){b.classList.remove('active');});
+  if (kitchenDiscount>0) btn.classList.add('active');
+  updateKitchenPrice();
+}
+
+function updateKitchenPrice() {
+  var order = orders.find(function(o){return o.id===currentReadyOrderId;});
+  var manualEl = document.getElementById('kitchenWeightManual');
+  var weight = manualEl&&manualEl.value ? parseFloat(manualEl.value)||0 : parseFloat(document.getElementById('kitchenWeightSelect').value||0);
+  var ppkg = parseFloat(document.getElementById('kitchenPricePerKg').value||19.99);
+  var ef = order&&order.extraFilling ? 1.99 : 0;
+  var ex = order ? (order.extraProducts||[]).reduce(function(s,p){return s+parseFloat(p.price||0);},0) : 0;
+  var subtotal = weight*ppkg+ef+ex;
+  var discAmt = subtotal*(kitchenDiscount/100);
+  var total = subtotal-discAmt;
+  window._kitchenTotal = total;
+  document.getElementById('kitchenPriceDisplay').innerHTML =
+    '<div>'+weight.toFixed(2)+' kg × €'+ppkg+'/kg = €'+(weight*ppkg).toFixed(2)+'</div>'
+    +(ef>0?'<div>Recheio extra: +€'+ef.toFixed(2)+'</div>':'')
+    +(ex>0?'<div>Extras: +€'+ex.toFixed(2)+'</div>':'')
+    +(kitchenDiscount>0?'<div style="color:var(--success)">Desconto '+kitchenDiscount+'%: -€'+discAmt.toFixed(2)+'</div>':'')
+    +'<div class="total-line">Total: <strong>€'+total.toFixed(2)+'</strong></div>';
+}
+
+function confirmKitchenWeight() {
+  var order = orders.find(function(o){return o.id===currentReadyOrderId;});
+  if (!order) return;
+  var manualEl = document.getElementById('kitchenWeightManual');
+  order.status = 'ready';
+  order.finalWeight = manualEl&&manualEl.value ? parseFloat(manualEl.value).toFixed(2) : document.getElementById('kitchenWeightSelect').value;
+  order.finalPrice = (window._kitchenTotal||0).toFixed(2);
+  order.finalPricePerKg = document.getElementById('kitchenPricePerKg').value;
+  order.finalDiscount = kitchenDiscount;
+  saveOrder(order, function(){
+    document.getElementById('finalWeightModal').classList.remove('active');
+    renderKitchenOrders();
+    showToast('✅ Pronto! Peso: '+order.finalWeight+' kg · €'+order.finalPrice,'success');
+  });
+}
+
+function viewKitchenPhoto(url) {
+  document.getElementById('photoModalImg').src = url;
+  document.getElementById('photoModal').classList.add('active');
+}
+
+function showToast(msg, type) {
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast show '+(type||'');
+  clearTimeout(t._t);t._t=setTimeout(function(){t.className='toast';},3500);
+}
+
+document.getElementById('logoutBtn').addEventListener('click', function(){
+  AUTH.logout();window.location.href='login.html';
+});
+
+requestNotifPermission();
+  loadData(function(){
+    checkForNewOrders(orders);
+    renderKitchenOrders();
+  });
+setInterval(function(){
+  loadData(function(){
+    checkForNewOrders(orders);
+    renderKitchenOrders();
+  });
+}, 10000);
+document.addEventListener('ordersUpdated', function(){renderKitchenOrders();});
+</script>
+</body>
+</html>
